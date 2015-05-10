@@ -245,9 +245,8 @@ void ExtractionContainers::PrepareEdges()
                 }
                 return -1.0;
             }(edge_iterator->weight_data);
-            // if duration was set for the way the speed value is duratoin / number_of_nodes ~ edge duration
-            int integer_weight = std::max(1, (int)std::floor(weight + .5));
-            edge_iterator->result.weight = integer_weight;
+
+            edge_iterator->result.weight = std::max(1, (int)std::floor(weight + .5));
         }
         ++edge_iterator;
     }

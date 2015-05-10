@@ -114,14 +114,14 @@ void ExtractorCallbacks::ProcessWay(const osmium::Way &input_way, const Extracti
 
     if (0 < parsed_way.duration)
     {
-        const unsigned num_nodes = input_way.nodes().size();
+        const unsigned num_edges = (input_way.nodes().size() - 1);
         // FIXME We devide by the numer of nodes here, but should rather consider
         // the length of each segment. We would eigther have to compute the length
         // of the whole way here (we can't: no node coordinates) or push that back
         // to the container and keep a reference to the way.
-        forward_weight_data.duration = parsed_way.duration / num_nodes;
+        forward_weight_data.duration = parsed_way.duration / num_edges;
         forward_weight_data.type = InternalExtractorEdge::WeightType::WAY_DURATION;
-        backward_weight_data.duration = parsed_way.duration / num_nodes;
+        backward_weight_data.duration = parsed_way.duration / num_edges;
         backward_weight_data.type = InternalExtractorEdge::WeightType::WAY_DURATION;
     }
     else
@@ -135,7 +135,7 @@ void ExtractorCallbacks::ProcessWay(const osmium::Way &input_way, const Extracti
         if (parsed_way.backward_speed > 0 &&
             parsed_way.backward_travel_mode != TRAVEL_MODE_INACCESSIBLE)
         {
-            backward_weight_data.speed = parsed_way.forward_speed;
+            backward_weight_data.speed = parsed_way.backward_speed;
             backward_weight_data.type = InternalExtractorEdge::WeightType::SPEED;
         }
     }

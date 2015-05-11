@@ -215,7 +215,7 @@ void ExtractorCallbacks::ProcessWay(const osmium::Way &input_way, const Extracti
             external_memory.all_edges_list.push_back(InternalExtractorEdge(
                 last_node.ref(), first_node.ref(), name_id, backward_weight_data,
                 true, false, parsed_way.roundabout, parsed_way.ignore_in_grid,
-                parsed_way.is_access_restricted, parsed_way.forward_travel_mode, split_edge));
+                parsed_way.is_access_restricted, parsed_way.backward_travel_mode, split_edge));
             external_memory.used_node_id_list.push_back(last_node.ref());
         };
 

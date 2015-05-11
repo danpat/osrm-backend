@@ -140,7 +140,8 @@ void ExtractorCallbacks::ProcessWay(const osmium::Way &input_way, const Extracti
         }
     }
 
-    if (std::numeric_limits<double>::epsilon() >= std::abs(-1. - parsed_way.forward_speed))
+    if (forward_weight_data.type == InternalExtractorEdge::WeightType::INVALID
+     && backward_weight_data.type == InternalExtractorEdge::WeightType::INVALID)
     {
         SimpleLogger().Write(logDEBUG) << "found way with bogus speed, id: " << input_way.id();
         return;
@@ -215,7 +216,7 @@ void ExtractorCallbacks::ProcessWay(const osmium::Way &input_way, const Extracti
                 last_node.ref(), first_node.ref(), name_id, backward_weight_data,
                 true, false, parsed_way.roundabout, parsed_way.ignore_in_grid,
                 parsed_way.is_access_restricted, parsed_way.forward_travel_mode, split_edge));
-            external_memory.used_node_id_list.push_back(first_node.ref());
+            external_memory.used_node_id_list.push_back(last_node.ref());
         };
 
         if (is_opposite_way)
@@ -228,7 +229,7 @@ void ExtractorCallbacks::ProcessWay(const osmium::Way &input_way, const Extracti
         {
             osrm::for_each_pair(input_way.nodes().cbegin(), input_way.nodes().cend(),
                                 pair_wise_segment_split_2);
-            external_memory.used_node_id_list.push_back(input_way.nodes().back().ref());
+            external_memory.used_node_id_list.push_back(input_way.nodes().front().ref());
         }
 
         external_memory.way_start_end_id_list.push_back(

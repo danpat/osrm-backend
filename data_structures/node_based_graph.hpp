@@ -85,6 +85,7 @@ NodeBasedDynamicGraphFromImportEdges(int number_of_nodes, std::vector<NodeBasedE
     NodeBasedDynamicGraph::InputEdge edge;
     for (const NodeBasedEdge &import_edge : input_edge_list)
     {
+        BOOST_ASSERT(import_edge.forward || import_edge.backward);
         if (import_edge.forward)
         {
             edge.source = import_edge.source;

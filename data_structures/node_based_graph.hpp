@@ -64,7 +64,7 @@ struct NodeBasedEdgeData
         backward = temp_flag;
     }
 
-    bool IsEqualTo(const NodeBasedEdgeData &other) const
+    bool IsCompatibleTo(const NodeBasedEdgeData &other) const
     {
         return (forward == other.forward) && (backward == other.backward) &&
                (nameID == other.nameID) && (ignore_in_grid == other.ignore_in_grid) &&

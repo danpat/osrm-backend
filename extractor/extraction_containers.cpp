@@ -79,10 +79,6 @@ void ExtractionContainers::PrepareData(const std::string &output_file_name,
 {
     try
     {
-
-        PrepareRestrictions();
-        WriteRestrictions(restrictions_file_name);
-
         std::ofstream file_out_stream;
         file_out_stream.open(output_file_name.c_str(), std::ios::binary);
         file_out_stream.write((char *)&fingerprint, sizeof(FingerPrint));
@@ -93,6 +89,9 @@ void ExtractionContainers::PrepareData(const std::string &output_file_name,
         WriteEdges(file_out_stream);
 
         file_out_stream.close();
+
+        PrepareRestrictions();
+        WriteRestrictions(restrictions_file_name);
 
         WriteNames(name_file_name);
     }
@@ -532,7 +531,7 @@ void ExtractionContainers::PrepareRestrictions()
         {
             // assign new from node id
             auto id_iter = external_to_internal_node_id_map.find(
-                    way_start_and_end_iterator->first_segment_source_id);
+                    way_start_and_end_iterator->first_segment_target_id);
             BOOST_ASSERT(id_iter != external_to_internal_node_id_map.end());
             restrictions_iterator->restriction.from.node = id_iter->second;
         }
@@ -601,7 +600,7 @@ void ExtractionContainers::PrepareRestrictions()
         else if (way_start_and_end_iterator->last_segment_target_id == via_node_id)
         {
             auto to_id_iter = external_to_internal_node_id_map.find(
-                    way_start_and_end_iterator->last_segment_target_id);
+                    way_start_and_end_iterator->last_segment_source_id);
             BOOST_ASSERT(to_id_iter != external_to_internal_node_id_map.end());
             restrictions_iterator->restriction.to.node = to_id_iter->second;
         }

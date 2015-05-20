@@ -448,6 +448,17 @@ void EdgeBasedGraphFactory::RenumberEdges()
             // FIXME when does that happen? why can we skip here?
             if (!edge_data.forward)
             {
+
+#ifndef NDEBUG
+                auto target = m_node_based_graph->GetTarget(current_edge);
+                BOOST_ASSERT(target != SPECIAL_NODEID);
+
+                auto rev_edge = m_node_based_graph->FindEdge(target, current_node);
+                BOOST_ASSERT(rev_edge != SPECIAL_EDGEID);
+
+                const auto& rev_data = m_node_based_graph->GetEdgeData(rev_edge);
+                BOOST_ASSERT(rev_data.forward);
+#endif
                 continue;
             }
 

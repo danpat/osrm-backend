@@ -234,6 +234,31 @@ void EdgeBasedGraphFactory::Run(const std::string &original_edge_data_filename,
                                 lua_State *lua_state)
 {
 
+#ifndef NDEBUG
+    SimpleLogger().Write() << "Verifying the graph structure before compression:";
+    for (const auto current_node : osrm::irange(0u, m_node_based_graph->GetNumberOfNodes()))
+    {
+        for (const auto current_edge : m_node_based_graph->GetAdjacentEdgeRange(current_node))
+        {
+            EdgeData &edge_data = m_node_based_graph->GetEdgeData(current_edge);
+            if (!edge_data.forward)
+            {
+
+                auto target = m_node_based_graph->GetTarget(current_edge);
+                BOOST_ASSERT(target != SPECIAL_NODEID);
+
+                auto rev_edge = m_node_based_graph->FindEdge(target, current_node);
+                BOOST_ASSERT(rev_edge != SPECIAL_EDGEID);
+
+                const auto& rev_data = m_node_based_graph->GetEdgeData(rev_edge);
+                BOOST_ASSERT(rev_data.forward);
+                continue;
+            }
+        }
+    }
+    SimpleLogger().Write() << " -> graph is ok.";
+#endif
+
     TIMER_START(geometry);
     CompressGeometry();
     TIMER_STOP(geometry);

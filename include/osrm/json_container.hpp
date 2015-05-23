@@ -84,6 +84,10 @@ using Value = mapbox::util::variant<String,
 struct Object
 {
     std::unordered_map<std::string, Value> values;
+
+    Value& operator[](std::string const& key) {
+      return values[key];
+    }
 };
 
 struct Array

@@ -41,7 +41,7 @@ add_custom_target(FingerPrintConfigure ALL
   COMMENT "Configuring revision fingerprint"
   VERBATIM)
 
-add_custom_target(tests DEPENDS datastructure-tests algorithm-tests)
+add_custom_target(tests DEPENDS datastructure-tests algorithm-tests routing-tests)
 add_custom_target(benchmarks DEPENDS rtree-bench)
 
 set(BOOST_COMPONENTS date_time filesystem iostreams program_options regex system thread unit_test_framework)
@@ -78,6 +78,7 @@ file(GLOB HttpGlob server/http/*.cpp)
 file(GLOB LibOSRMGlob library/*.cpp)
 file(GLOB DataStructureTestsGlob unit_tests/data_structures/*.cpp data_structures/hilbert_value.cpp)
 file(GLOB AlgorithmTestsGlob unit_tests/algorithms/*.cpp)
+file(GLOB RoutingTestsGlob unit_tests/routing/*.cpp)
 
 set(
   OSRMSources
@@ -103,6 +104,7 @@ add_executable(osrm-datastore datastore.cpp $<TARGET_OBJECTS:COORDINATE> $<TARGE
 # Unit tests
 add_executable(datastructure-tests EXCLUDE_FROM_ALL unit_tests/datastructure_tests.cpp ${DataStructureTestsGlob} $<TARGET_OBJECTS:COORDINATE> $<TARGET_OBJECTS:LOGGER> $<TARGET_OBJECTS:PHANTOMNODE> $<TARGET_OBJECTS:EXCEPTION> $<TARGET_OBJECTS:MERCATOR>)
 add_executable(algorithm-tests EXCLUDE_FROM_ALL unit_tests/algorithm_tests.cpp ${AlgorithmTestsGlob} $<TARGET_OBJECTS:COORDINATE> $<TARGET_OBJECTS:LOGGER> $<TARGET_OBJECTS:PHANTOMNODE> $<TARGET_OBJECTS:EXCEPTION>)
+add_executable(routing-tests EXCLUDE_FROM_ALL unit_tests/routing_tests.cpp ${RoutingTestsGlob} $<TARGET_OBJECTS:COORDINATE> $<TARGET_OBJECTS:LOGGER> $<TARGET_OBJECTS:PHANTOMNODE> $<TARGET_OBJECTS:EXCEPTION>)
 
 # Benchmarks
 add_executable(rtree-bench EXCLUDE_FROM_ALL benchmarks/static_rtree.cpp $<TARGET_OBJECTS:COORDINATE> $<TARGET_OBJECTS:LOGGER> $<TARGET_OBJECTS:PHANTOMNODE> $<TARGET_OBJECTS:EXCEPTION> $<TARGET_OBJECTS:MERCATOR>)
@@ -223,6 +225,7 @@ target_link_libraries(osrm-routed ${Boost_LIBRARIES} ${OPTIONAL_SOCKET_LIBS} OSR
 target_link_libraries(osrm-datastore ${Boost_LIBRARIES})
 target_link_libraries(datastructure-tests ${Boost_LIBRARIES})
 target_link_libraries(algorithm-tests ${Boost_LIBRARIES} ${OPTIONAL_SOCKET_LIBS} OSRM)
+target_link_libraries(routing-tests ${Boost_LIBRARIES} ${OPTIONAL_SOCKET_LIBS} OSRM)
 target_link_libraries(rtree-bench ${Boost_LIBRARIES})
 
 find_package(Threads REQUIRED)
@@ -232,6 +235,7 @@ target_link_libraries(osrm-prepare ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(OSRM ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(datastructure-tests ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(algorithm-tests ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(routing-tests ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(rtree-bench ${CMAKE_THREAD_LIBS_INIT})
 
 find_package(TBB REQUIRED)
@@ -244,6 +248,7 @@ target_link_libraries(osrm-prepare ${TBB_LIBRARIES})
 target_link_libraries(osrm-routed ${TBB_LIBRARIES})
 target_link_libraries(datastructure-tests ${TBB_LIBRARIES})
 target_link_libraries(algorithm-tests ${TBB_LIBRARIES})
+target_link_libraries(routing-tests ${TBB_LIBRARIES})
 target_link_libraries(rtree-bench ${TBB_LIBRARIES})
 include_directories(${TBB_INCLUDE_DIR})
 

@@ -40,9 +40,15 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <iostream>
 
+struct ArgsFixture {
+   ArgsFixture(): argc(boost::unit_test::framework::master_test_suite().argc),
+           argv(boost::unit_test::framework::master_test_suite().argv){}
+   int argc;
+   char **argv;
+};
 
 
-BOOST_AUTO_TEST_SUITE(shortest_path)
+BOOST_FIXTURE_TEST_SUITE(shortest_path, ArgsFixture)
 
 
 
@@ -51,6 +57,14 @@ BOOST_AUTO_TEST_CASE(all_necessary_test)
 {
 
     std::string base_string("../unit_tests/data/montevideo.osrm");
+
+    // If supplied, use the first command-line parameter as the OSRM
+    // filename to load
+    if (argc > 1)
+    {
+      base_string = argv[1];
+    }
+
     ServerPaths server_paths;
     server_paths["hsgrdata"] = base_string + ".hsgr";
     server_paths["nodesdata"] = base_string + ".nodes";

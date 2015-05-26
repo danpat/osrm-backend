@@ -94,30 +94,32 @@ class ShortestPathRouting final
                                       uturn_indicators[current_leg - 1];
             EdgeWeight min_edge_offset = 0;
 
+            bool same_node = phantom_node_pair.source_phantom.forward_node_id == phantom_node_pair.target_phantom.forward_node_id;
+
             // insert new starting nodes into forward heap, adjusted by previous distances.
             if ((allow_u_turn || search_from_1st_node) &&
                 phantom_node_pair.source_phantom.forward_node_id != SPECIAL_NODEID)
             {
                 forward_heap1.Insert(
                     phantom_node_pair.source_phantom.forward_node_id,
-                    (allow_u_turn ? 0 : distance1) -
+                    (allow_u_turn || same_node ? 0 : distance1) -
                         phantom_node_pair.source_phantom.GetForwardWeightPlusOffset(),
                     phantom_node_pair.source_phantom.forward_node_id);
                 min_edge_offset =
                     std::min(min_edge_offset,
-                             (allow_u_turn ? 0 : distance1) -
+                             (allow_u_turn || same_node ? 0 : distance1) -
                                  phantom_node_pair.source_phantom.GetForwardWeightPlusOffset());
                 // SimpleLogger().Write(logDEBUG) << "fwd-a2 insert: " <<
                 // phantom_node_pair.source_phantom.forward_node_id << ", w: " << (allow_u_turn ? 0
                 // : distance1) - phantom_node_pair.source_phantom.GetForwardWeightPlusOffset();
                 forward_heap2.Insert(
                     phantom_node_pair.source_phantom.forward_node_id,
-                    (allow_u_turn ? 0 : distance1) -
+                    (allow_u_turn || same_node ? 0 : distance1) -
                         phantom_node_pair.source_phantom.GetForwardWeightPlusOffset(),
                     phantom_node_pair.source_phantom.forward_node_id);
                 min_edge_offset =
                     std::min(min_edge_offset,
-                             (allow_u_turn ? 0 : distance1) -
+                             (allow_u_turn || same_node ? 0 : distance1) -
                                  phantom_node_pair.source_phantom.GetForwardWeightPlusOffset());
                 // SimpleLogger().Write(logDEBUG) << "fwd-b2 insert: " <<
                 // phantom_node_pair.source_phantom.forward_node_id << ", w: " << (allow_u_turn ? 0
@@ -128,12 +130,12 @@ class ShortestPathRouting final
             {
                 forward_heap1.Insert(
                     phantom_node_pair.source_phantom.reverse_node_id,
-                    (allow_u_turn ? 0 : distance2) -
+                    (allow_u_turn || same_node ? 0 : distance2) -
                         phantom_node_pair.source_phantom.GetReverseWeightPlusOffset(),
                     phantom_node_pair.source_phantom.reverse_node_id);
                 min_edge_offset =
                     std::min(min_edge_offset,
-                             (allow_u_turn ? 0 : distance2) -
+                             (allow_u_turn || same_node ? 0 : distance2) -
                                  phantom_node_pair.source_phantom.GetReverseWeightPlusOffset());
                 // SimpleLogger().Write(logDEBUG) << "fwd-a2 insert: " <<
                 // phantom_node_pair.source_phantom.reverse_node_id <<
@@ -141,12 +143,12 @@ class ShortestPathRouting final
                 //                     phantom_node_pair.source_phantom.GetReverseWeightPlusOffset();
                 forward_heap2.Insert(
                     phantom_node_pair.source_phantom.reverse_node_id,
-                    (allow_u_turn ? 0 : distance2) -
+                    (allow_u_turn || same_node ? 0 : distance2) -
                         phantom_node_pair.source_phantom.GetReverseWeightPlusOffset(),
                     phantom_node_pair.source_phantom.reverse_node_id);
                 min_edge_offset =
                     std::min(min_edge_offset,
-                             (allow_u_turn ? 0 : distance2) -
+                             (allow_u_turn || same_node ? 0 : distance2) -
                                  phantom_node_pair.source_phantom.GetReverseWeightPlusOffset());
                 // SimpleLogger().Write(logDEBUG) << "fwd-b2 insert: " <<
                 // phantom_node_pair.source_phantom.reverse_node_id <<
